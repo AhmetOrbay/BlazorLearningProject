@@ -1,0 +1,58 @@
+﻿@page "/buttontest"
+
+
+<div class="form-group">
+
+    <div class="container">
+        <div class="btn-toolbar">
+
+        <OpenButtonComponent OnClick="changeTitle" />
+
+            <ButtonComponent  />
+
+
+            <button type="button" class="btn btn-danger">
+                <span class="oi oi-home"></span>
+                Secondary
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@code {
+
+    //modali kullanabilmek icin apprazora cascading ekledik. buradanda parametre olarka verdiks
+    [CascadingParameter]
+    IModalService Modal { get; set; }
+
+    [Inject]
+    ModalManager ModalManager { get; set; }
+
+    private String Title = "";
+
+
+    private async Task changeTitle()
+    {
+        await ModalManager.ShowMessageAsync("Show message Title", "Kayit Silindi");
+
+        //ModalParameters parameters = new ModalParameters();
+        ////buradan gonderilen message ile orada gosteririz
+        //parameters.Add("Message", "Test Message");
+        //parameters.Add("YesText", "YES");
+        //parameters.Add("NoText", "NO");
+
+        //Modal.Show<ComfirmationPopupComponent>("CounterPopop", parameters);
+    }
+
+    private async Task showConfirmation()
+    {
+        var res = await ModalManager.ConfirmationAsync("Confirmation ", "are you sure");
+
+        if (res) Title = "Yes just click"; else Title = "'No Just Clck";
+    }
+
+}

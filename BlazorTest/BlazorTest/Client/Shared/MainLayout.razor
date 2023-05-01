@@ -1,0 +1,45 @@
+﻿@inherits LayoutComponentBase
+
+<BlazoredModal/>
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">@LoginStatus</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code{
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
+
+    [Inject]
+    ILocalStorageService localStorage{ get; set; }
+
+    [Inject]
+    NavigationManager navigationManager { get; set; }
+
+    private string LoginStatus = "About";
+
+    protected async override Task OnInitializedAsync()
+    {
+        //burasi authState classindan gelmektedir.
+        var authState = await AuthState;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            LoginStatus = await localStorage.GetItemAsStringAsync("UserMail");
+        }
+        else
+        {
+            navigationManager.NavigateTo("/login");   
+        }
+    }
+}

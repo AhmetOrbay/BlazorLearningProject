@@ -1,0 +1,33 @@
+﻿@page "/"
+
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world! Counter size @counter</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<p>
+    Selected Guid is @supplierGuid.ToString()
+</p>
+
+
+<BlazorTest.Client.CustomComponents.SupplierDropDown @bind-Value="supplierGuid" @bind-Value:event="ValueChanged" />
+
+
+@code{
+    private int counter = 0;
+
+    private Guid supplierGuid = Guid.Parse("966fa416-11ee-4371-af61-c4508322bea1");
+
+    protected async override Task OnInitializedAsync()
+    {
+        counter = await LocalStorage.GetItemAsync<int>("Counter");
+
+
+    }
+}

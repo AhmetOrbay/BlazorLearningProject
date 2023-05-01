@@ -1,0 +1,59 @@
+﻿@page "/userlist"
+
+@inherits UserListProcess
+
+<div class="btn-groip">
+    <div class="container">
+        <AddNewButtonComponent Caption="Create User" OnClick="GotoCreateUser">
+
+        </AddNewButtonComponent>
+    </div>
+
+</div>
+
+
+
+@if (userList != null)
+{
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">FirstName</th>
+                <th scope="col">LastName</th>
+                <th scope="col">Create Date</th>
+                <th scope="col"> Status</th>
+                <th scope="col"> Update</th>
+                <th scope="col"> Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in userList)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.CreateTime</td>
+                    <td>@item.IsActive</td>
+                    <td>
+                        <CustomEditComponent IsSmall="true" Caption="" IsOutline="true" OnClick="(()=>GotoEditUser(item.Id))">
+
+                        </CustomEditComponent>
+                    </td>
+                    <td>
+                        <DeleteButtonComponent IsSmall="true" Caption="" IsOutline="true" OnClick="(()=>DeleteUser(item.Id))">
+
+                        </DeleteButtonComponent>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+}
+
+@code {
+    
+}

@@ -1,0 +1,94 @@
+﻿@page "/orders"
+
+@inherits BlazorTest.Client.Pages.PageProcess.OrderBusiness
+
+
+
+<div class="card">
+    <div class="card-header d-flex align-items-center h-75">
+        Filter Section
+    </div>
+
+    <div class="card-body">
+        <EditForm Model="@filterModel">
+
+            <div class="form-row">
+                <div class="form-group col">
+                    <label>Create User</label>
+                    <UserListDropDown @bind-Value="filterModel.CreatedUserId" @bind-Value:event="ValueChanged" />
+                </div>
+
+                <div class="form-group col">
+                    <label>Create Date</label>
+                    <div class="d-flex">
+                        <InputDate class="form-control" @bind-Value="filterModel.CreateDateFirst" />
+                        <InputDate class="form-control" @bind-Value="filterModel.CreateDateLast" />
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="btn-group">
+                    <RefreshButtonComponent Caption="List" OnClick="ReLoadList" />
+                    <AddNewButtonComponent Caption="Create Order" OnClick="GoCreateOrder" />
+                </div>
+            </div>
+
+        </EditForm>
+    </div>
+</div>
+
+
+
+<br />
+<br />
+
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            @*<th scope="col">Id</th>*@
+            <th scope="col">Name</th>
+            <th scope="col">Created By</th>
+            <th scope="col">Supplier</th>
+            <th scope="col">Created Date</th>
+            <th scope="col">Expire Date</th>
+            <th scope="col">Remaining</th>
+            <th scope="col" style="width: auto">#</th>
+            <th scope="col" style="width: auto">#</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (OrderList != null && OrderList.Count() > 0) 
+        {
+            Console.WriteLine($"Count : {OrderList.Count()}");
+            @foreach (var order in OrderList)
+            {
+                <tr class="@(IsExpired(order.ExpireTime) ? "bg-warning":"")">
+                    <td>@order.Id</td>
+                    <td>@order.Name</td>
+                    <td>@order.CreateUserFullName</td>
+                    <td>@order.SupplierName</td>
+                    <td>@order.CreateTime.ToCustomDateTimeString()</td>
+                    <td>@order.ExpireTime.ToCustomDateTimeString()</td>
+                    <td>@(IsExpired(order.ExpireTime) ? "Expired" : order.ExpireTime.GetRemaningDateStr())</td>
+
+                    <td>
+                        <div class="btn-toolbar">
+
+                            @if (IsMyOrder(order.CreateUserId))
+                            {
+                                <CustomEditComponent IsSmall="true" IsOutline="true" Caption="" OnClick="(() => GoEditOrder(order.Id))" />
+                                <DeleteButtonComponent IsSmall="true" IsOutline="true" Caption="" OnClick="(() => DeleteOrder(order.Id))" />
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        }
+        
+    </tbody>
+</table>
+
